@@ -1,2 +1,2 @@
 # AndroidSandbox
-sandbox for learning Kotlin with Jetbrain Compose
+sandbox for learning Kotlin with Jetpack Compose
