@@ -83,7 +83,7 @@ fun Quadrant(title: String, text: String, color: Color, modifier: Modifier = Mod
         Column (
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier
+            modifier = Modifier
                 .padding(16.dp)
         ){
 
