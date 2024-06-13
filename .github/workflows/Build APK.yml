@@ -13,6 +13,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Setup kstf
+        run: |
+          echo "${{ secrets.KSTF }}" > shatterpointhelper.keystore.asc
+          gpg -d --passphrase "${{ secrets.GPGP }}" --batch shatterpointhelper.keystore.asc > Shatterpoint.Maui/shatterpointhelper.keystore
+
       - name: set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -27,7 +32,11 @@ jobs:
       - name: Build with Gradle
         working-directory: ./ShatterpointSandbox
         run: ./gradlew build
-
+        env:
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          
       - name: Build release APK
         working-directory: ./ShatterpointSandbox
         run: bash ./gradlew assembleRelease --stacktrace
