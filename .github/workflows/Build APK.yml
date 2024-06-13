@@ -25,12 +25,12 @@ jobs:
         run: chmod +x gradlew
 
       - name: Decode Keystore
-        env:
-          ENCODED_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
-          DECODED_KEYSTORE_PATH: ${{ secrets.RELEASE_KEYSTORE_PATH }}
-        run: |
-          echo $ENCODED_KEYSTORE > keystore_base64.txt
-          base64 -d keystore_base64.txt > $DECODED_KEYSTORE_PATH
+        id: decode_keystore
+        uses: timheuer/base64-to-file@v1
+        with:
+          working-directory: ./ShatterpointSandbox
+          fileName: 'keystore/your_signing_keystore.jks'
+          encodedString: ${{ secrets.KEYSTORE }}
 
       - name: Build with Gradle
         working-directory: ./ShatterpointSandbox
@@ -39,10 +39,9 @@ jobs:
       - name: Build release APK
         working-directory: ./ShatterpointSandbox
         env:
-          RELEASE_KEYSTORE_PATH: ${{ secrets.RELEASE_KEYSTORE_PATH }}
-          RELEASE_SIGNING_PASSWORD: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
-          RELEASE_SIGNING_USERNAME: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
-          RELEASE_SIGNING_ALIAS: ${{ secrets.RELEASE_SIGNING_ALIAS }}
+          SIGNING_KEY_ALIAS: ${{ secrets.RELEASE_SIGNING_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
         run:
           ./gradlew assembleRelease
 
