@@ -36,17 +36,8 @@ jobs:
         working-directory: ./ShatterpointSandbox
         run: ls -al app/build/outputs/apk/debug
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        with:
-          tag_name: ${{ github.run_number }}
-          release_name: ${{ github.event.repository.name }} v${{ github.run_number }}
-
       - name: Upload aab and apk
         uses: actions/upload-artifact@v4
         with:
           path: |
-            ./**/bin/Release/**/*.apk
+            ./**/ShatterpointSandbox/**/.apk
