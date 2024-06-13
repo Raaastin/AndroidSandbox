@@ -21,15 +21,19 @@ jobs:
           cache: gradle
 
       - name: Grant execute permission for gradlew
+        working-directory: ./ShatterpointSandbox
         run: chmod +x gradlew
 
       - name: Build with Gradle
+        working-directory: ./ShatterpointSandbox
         run: ./gradlew build
 
       - name: Build debug APK
+        working-directory: ./ShatterpointSandbox
         run: bash ./gradlew assembleDebug --stacktrace
 
       - name: Check files
+        working-directory: ./ShatterpointSandbox
         run: ls -al app/build/outputs/apk/debug
 
       - name: Create Release
