@@ -28,16 +28,16 @@ jobs:
         working-directory: ./ShatterpointSandbox
         run: ./gradlew build
 
-      - name: Build debug APK
+      - name: Build release APK
         working-directory: ./ShatterpointSandbox
-        run: bash ./gradlew assembleDebug --stacktrace
+        run: bash ./gradlew assembleRelease --stacktrace
 
       - name: Check files
         working-directory: ./ShatterpointSandbox
-        run: ls -al app/build/outputs/apk/debug
+        run: ls -al app/build/outputs/apk/release
 
       - name: Upload aab and apk
         uses: actions/upload-artifact@v4
         with:
           path: |
-            ./**/ShatterpointSandbox/**/.apk
+            ./**/app/build/outputs/apk/release/*.apk
