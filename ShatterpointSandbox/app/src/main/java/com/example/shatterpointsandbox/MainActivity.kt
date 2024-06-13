@@ -53,7 +53,19 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ShatterpointSandboxTheme {
-                Page()
+                Scaffold (
+                    topBar = {
+                        Text("TopBar")
+                    },
+                    bottomBar = {
+                        UnitArray(Modifier)
+                    },
+                    modifier = Modifier.padding(8.dp)
+                ){innerPadding ->
+                    Content(
+                        modifier = Modifier.padding(innerPadding)
+                    )
+                }
             }
         }
     }
@@ -89,8 +101,7 @@ private fun GenerateList(): List<String>
 fun UnitRow(unitName: String, modifier: Modifier = Modifier){
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(8.dp),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ){
         ProfilePicture(
@@ -98,14 +109,28 @@ fun UnitRow(unitName: String, modifier: Modifier = Modifier){
             left = -12,
             top = 6,
             modifier = Modifier
-                .weight(1f)
-        )
-        Text(
-            unitName,
-            modifier = Modifier
                 .padding(8.dp)
-                .weight(1f)
         )
+        Column(
+            modifier = Modifier
+                .weight(1f)
+        ){
+            Text(
+                unitName,
+                modifier = Modifier
+                    .padding(8.dp)
+            )
+            Text(
+                "Type",
+                modifier = Modifier
+                    .padding(8.dp)
+            )
+            Text(
+                "Keywords",
+                modifier = Modifier
+                    .padding(8.dp)
+            )
+        }
         Button(
             onClick = { /*TODO*/ },
             modifier = Modifier
@@ -117,28 +142,21 @@ fun UnitRow(unitName: String, modifier: Modifier = Modifier){
 }
 
 @Composable
-fun Page(modifier : Modifier = Modifier){
-    Column {
-        Surface (
-            color = Color.Gray,
-            modifier = modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-                .weight(10f)
-        ){
-            UnitList(GenerateList())
-        }
-        UnitArray(
-            modifier.weight(1f)
-        )
+fun Content(modifier : Modifier = Modifier){
+    Surface (
+        color = Color.Gray,
+        modifier = modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+    ){
+        UnitList(GenerateList())
     }
 }
 
 @Composable
 fun UnitArray(modifier: Modifier = Modifier){
     Row (
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     )
@@ -146,44 +164,32 @@ fun UnitArray(modifier: Modifier = Modifier){
         ProfilePicture(
             resourceId = R.drawable.untitled,
             left = -12,
-            top = 6,
-            modifier = modifier
-                .weight(1f)
+            top = 6
         )
         ProfilePicture(
             resourceId = R.drawable.untitled,
             left = -12,
-            top = 6,
-            modifier = modifier
-                .weight(1f)
+            top = 6
         )
         ProfilePicture(
             resourceId = R.drawable.untitled,
             left = -12,
-            top = 6,
-            modifier = modifier
-                .weight(1f)
+            top = 6
         )
         ProfilePicture(
             resourceId = R.drawable.untitled,
             left = -12,
-            top = 6,
-            modifier = modifier
-                .weight(1f)
+            top = 6
         )
         ProfilePicture(
             resourceId = R.drawable.untitled,
             left = -12,
-            top = 6,
-            modifier = modifier
-                .weight(1f)
+            top = 6
         )
         ProfilePicture(
             resourceId = R.drawable.untitled,
             left = -12,
-            top = 6,
-            modifier = modifier
-                .weight(1f)
+            top = 6
         )
     }
 }
@@ -195,7 +201,7 @@ fun ProfilePicture(resourceId: Int, left: Int, top: Int, modifier: Modifier = Mo
     Image(
         painter = painter,
         contentDescription = "example",
-        modifier = Modifier
+        modifier = modifier
             .size(50.dp)
             .clip(RoundedCornerShape(percent = 50))
             .scale(5f)
@@ -203,10 +209,10 @@ fun ProfilePicture(resourceId: Int, left: Int, top: Int, modifier: Modifier = Mo
     )
 }
 
-@Preview(showBackground = false)
+@Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     ShatterpointSandboxTheme {
-        Page()
+        UnitArray(Modifier.fillMaxWidth())
     }
 }
