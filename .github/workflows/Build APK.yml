@@ -28,20 +28,15 @@ jobs:
         working-directory: ./ShatterpointSandbox
         run: ./gradlew build
           
-      #- name: Sign and Build Release Bundle
-      #  env:
-      #    RELEASE_KEYSTORE_PATH: ${{ secrets.RELEASE_KEYSTORE_PATH }}
-      #    RELEASE_SIGNING_PASSWORD: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
-      #    RELEASE_SIGNING_USERNAME: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
-      #    RELEASE_SIGNING_ALIAS: ${{ secrets.RELEASE_SIGNING_ALIAS }}
-      #  working-directory: ./ShatterpointSandbox
-      #  run:
-      #    ./gradlew assembleRelease
+      - name: Sign and Build Release Bundle
+        working-directory: ./ShatterpointSandbox
+        run:
+          ./gradlew assembleRelease
 
       - uses: r0adkll/sign-android-release@v1
         with:
           working-directory: ./ShatterpointSandbox
-          releaseDirectory: app/build/outputs/apk/release
+          releaseDirectory: app/release
           signingKeyBase64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
           alias: ${{ secrets.RELEASE_SIGNING_ALIAS }}
           keyStorePassword: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
