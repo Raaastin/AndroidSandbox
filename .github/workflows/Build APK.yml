@@ -42,6 +42,7 @@ jobs:
           RELEASE_SIGNING_PASSWORD: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
           RELEASE_SIGNING_USERNAME: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
           RELEASE_SIGNING_ALIAS: ${{ secrets.RELEASE_SIGNING_ALIAS }}
+        working-directory: ./ShatterpointSandbox
         run:
           ./gradlew assembleRelease
 
