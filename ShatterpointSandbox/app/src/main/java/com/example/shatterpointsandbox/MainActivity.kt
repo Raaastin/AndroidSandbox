@@ -31,6 +31,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -50,17 +51,20 @@ import com.example.shatterpointsandbox.ui.theme.ShatterpointSandboxTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             ShatterpointSandboxTheme {
                 Scaffold (
                     topBar = {
-                        Text("TopBar")
+                        Text(
+                            "Insert Menu Here",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Color.Cyan)
+                        )
                     },
                     bottomBar = {
-                        UnitArray(Modifier)
-                    },
-                    modifier = Modifier.padding(8.dp)
+                        UnitArray()
+                    }
                 ){innerPadding ->
                     Content(
                         modifier = Modifier.padding(innerPadding)
@@ -144,7 +148,6 @@ fun UnitRow(unitName: String, modifier: Modifier = Modifier){
 @Composable
 fun Content(modifier : Modifier = Modifier){
     Surface (
-        color = Color.Gray,
         modifier = modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
