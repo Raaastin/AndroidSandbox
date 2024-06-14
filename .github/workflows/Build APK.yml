@@ -24,27 +24,28 @@ jobs:
         working-directory: ./ShatterpointSandbox
         run: chmod +x gradlew
 
-      - name: Decode Keystore
-        env:
-          ENCODED_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
-          DECODED_KEYSTORE_PATH: ${{ secrets.RELEASE_KEYSTORE_PATH }}
-        run: |
-          echo $ENCODED_KEYSTORE > ShatterpointSandbox/keystore_base64.txt
-          base64 -d ShatterpointSandbox/keystore_base64.txt > $DECODED_KEYSTORE_PATH
-
       - name: Build with Gradle
         working-directory: ./ShatterpointSandbox
         run: ./gradlew build
           
-      - name: Sign and Build Release Bundle
-        env:
-          RELEASE_KEYSTORE_PATH: ${{ secrets.RELEASE_KEYSTORE_PATH }}
-          RELEASE_SIGNING_PASSWORD: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
-          RELEASE_SIGNING_USERNAME: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
-          RELEASE_SIGNING_ALIAS: ${{ secrets.RELEASE_SIGNING_ALIAS }}
-        working-directory: ./ShatterpointSandbox
-        run:
-          ./gradlew assembleRelease
+      #- name: Sign and Build Release Bundle
+      #  env:
+      #    RELEASE_KEYSTORE_PATH: ${{ secrets.RELEASE_KEYSTORE_PATH }}
+      #    RELEASE_SIGNING_PASSWORD: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
+      #    RELEASE_SIGNING_USERNAME: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
+      #    RELEASE_SIGNING_ALIAS: ${{ secrets.RELEASE_SIGNING_ALIAS }}
+      #  working-directory: ./ShatterpointSandbox
+      #  run:
+      #    ./gradlew assembleRelease
+
+      - uses: r0adkll/sign-android-release@v1
+        with:
+          working-directory: ./ShatterpointSandbox
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          alias: ${{ secrets.RELEASE_SIGNING_ALIAS }}
+          keyStorePassword: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
+          keyPassword: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
 
       - name: Check files
         working-directory: ./ShatterpointSandbox
