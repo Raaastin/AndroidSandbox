@@ -37,6 +37,7 @@ jobs:
         with:
           releaseDirectory: ShatterpointSandbox/app/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          output: ShatterpointSandbox/build/release/signed
           alias: ${{ secrets.RELEASE_SIGNING_ALIAS }}
           keyStorePassword: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
           keyPassword: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
@@ -49,4 +50,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: |
-            ./**/app/build/outputs/apk/release/*.apk
+            ./**/ShatterpointSandbox/build/release/signed/*.apk
