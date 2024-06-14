@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+ShatterpointSandbox/app/release/app-release.apk
+ShatterpointSandbox/app/release/baselineProfiles/0/app-release.dm

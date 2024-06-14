@@ -1,52 +1,43 @@
 package com.example.shatterpointsandbox
 
+import KeyWords
 import android.os.Bundle
-import android.provider.ContactsContract.Profile
-import android.widget.ImageButton
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clipScrollableContainer
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Recomposer
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.shatterpointsandbox.ui.theme.ShatterpointSandboxTheme
+import com.example.shatterpointsandbox.ui.theme.UnitKeyWordsColor
+import com.example.shatterpointsandbox.ui.theme.UnitNameColor
+import com.example.shatterpointsandbox.ui.theme.UnitTypeColor
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,10 +67,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun UnitList(unit: List<String>, modifier: Modifier = Modifier) {
+fun UnitList(modifier: Modifier = Modifier) {
+    var data = UnitDatabaseService().unitList
+
     Column (modifier = modifier){
-        unit.forEach { unitName ->
-            UnitRow(unitName)
+        data.forEach { unit ->
+            UnitRow(unit.name, unit.type, unit.keyWords)
         }
     }
 }
@@ -102,11 +95,11 @@ private fun GenerateList(): List<String>
 }
 
 @Composable
-fun UnitRow(unitName: String, modifier: Modifier = Modifier){
+fun UnitRow(unitName: String, type: UnitType, keyWords: List<String>, modifier: Modifier = Modifier){
     Row(
         modifier = modifier
             .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ){
         ProfilePicture(
             resourceId = R.drawable.untitled,
@@ -120,27 +113,38 @@ fun UnitRow(unitName: String, modifier: Modifier = Modifier){
                 .weight(1f)
         ){
             Text(
-                unitName,
-                modifier = Modifier
-                    .padding(8.dp)
+                text = unitName,
+                modifier = Modifier,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                color = UnitNameColor
             )
             Text(
-                "Type",
-                modifier = Modifier
-                    .padding(8.dp)
+                type.toString(),
+                modifier = Modifier,
+                fontWeight = FontWeight.Normal,
+                fontSize = 18.sp,
+                color = UnitTypeColor
             )
             Text(
-                "Keywords",
-                modifier = Modifier
-                    .padding(8.dp)
+                keyWords.joinToString(),
+                modifier = Modifier,
+                fontWeight = FontWeight.Normal,
+                fontSize = 16.sp,
+                color = UnitKeyWordsColor
             )
         }
-        Button(
-            onClick = { /*TODO*/ },
+        IconButton(
             modifier = Modifier
-                .weight(1f)
-        ) {
-            
+                .padding(4.dp),
+            onClick = { },
+
+        ){
+            Icon(
+                painter = painterResource(id = R.drawable.card_detail),
+                contentDescription = "detail button",
+                tint = UnitNameColor
+            )
         }
     }
 }
@@ -152,7 +156,7 @@ fun Content(modifier : Modifier = Modifier){
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ){
-        UnitList(GenerateList())
+        UnitList()
     }
 }
 
@@ -212,10 +216,10 @@ fun ProfilePicture(resourceId: Int, left: Int, top: Int, modifier: Modifier = Mo
     )
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = false)
 @Composable
 fun DefaultPreview() {
     ShatterpointSandboxTheme {
-        UnitArray(Modifier.fillMaxWidth())
+        UnitRow("kalany", UnitType.Secondary, listOf(KeyWords.BattleDroid, KeyWords.Droid, KeyWords.SeparatistAlliance))
     }
 }
