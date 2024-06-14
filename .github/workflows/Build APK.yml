@@ -24,26 +24,23 @@ jobs:
         working-directory: ./ShatterpointSandbox
         run: chmod +x gradlew
 
-      - name: Decode Keystore
-        id: decode_keystore
-        uses: timheuer/base64-to-file@v1
-        with:
-          working-directory: ./ShatterpointSandbox
-          fileName: 'keystore/your_signing_keystore.jks'
-          encodedString: ${{ secrets.KEYSTORE }}
-
       - name: Build with Gradle
         working-directory: ./ShatterpointSandbox
         run: ./gradlew build
           
-      - name: Build release APK
+      - name: Sign and Build Release Bundle
         working-directory: ./ShatterpointSandbox
-        env:
-          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
         run:
           ./gradlew assembleRelease
+
+      - uses: Tlaster/android-sign@v1
+        with:
+          releaseDirectory: ShatterpointSandbox/app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          output: ShatterpointSandbox/build/release/signed
+          alias: ${{ secrets.RELEASE_SIGNING_ALIAS }}
+          keyStorePassword: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
+          keyPassword: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
 
       - name: Check files
         working-directory: ./ShatterpointSandbox
@@ -53,4 +50,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: |
-            ./**/app/build/outputs/apk/release/*.apk
+            ./**/ShatterpointSandbox/build/release/signed/*.apk
