@@ -35,7 +35,7 @@ jobs:
 
       - uses: r0adkll/sign-android-release@v1
         with:
-          releaseDirectory: ShatterpointSandbox/app/release
+          releaseDirectory: ShatterpointSandbox/app/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
           alias: ${{ secrets.RELEASE_SIGNING_ALIAS }}
           keyStorePassword: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
