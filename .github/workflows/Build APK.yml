@@ -13,32 +13,41 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: set up JDK 17
+      - uses: kaisugi/action-regex-match@v1.0.0
+        id: regex-match
+        with:
+          text: ${{ github.event.head_commit.message }}
+          regex: '^v[0-9]+\.[0-9]+\.[0-9]+$'
+
+      - name: Setup JDK
         uses: actions/setup-java@v3
         with:
+          distribution: 'zulu'
           java-version: '17'
-          distribution: 'temurin'
-          cache: gradle
+          cache: 'gradle'
 
       - name: Grant execute permission for gradlew
         working-directory: ./ShatterpointSandbox
         run: chmod +x gradlew
-
-      - name: Build with Gradle
-        working-directory: ./ShatterpointSandbox
-        run: ./gradlew build
           
-      - name: Sign and Build Release Bundle
+      - name: Build
         working-directory: ./ShatterpointSandbox
         run:
           ./gradlew assembleRelease
 
-      - uses: Tlaster/android-sign@v1
+      - name: Move files
+        if: ${{ steps.regex-match.outputs.match != '' }}
+        run: |
+          mv ShatterpointSandbox/app/build/outputs/apk/release/app-release-unsigned.apk ShatterpointSandbox/app/build/outputs/app-release.apk
+
+      - name: Sign App
+        if: ${{ steps.regex-match.outputs.match != '' }}
+        id: sign_app
+        uses: ilharp/sign-android-release@v1.0.4
         with:
-          releaseDirectory: ShatterpointSandbox/app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
-          output: ShatterpointSandbox/build/release/signed
-          alias: ${{ secrets.RELEASE_SIGNING_ALIAS }}
+          releaseDir: Shatterpoint/app/build/outputs
+          signingKey: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          keyAlias: ${{ secrets.RELEASE_SIGNING_ALIAS }}
           keyStorePassword: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
           keyPassword: ${{ secrets.RELEASE_SIGNING_PASSWORD }}
 
@@ -50,4 +59,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: |
-            ./**/ShatterpointSandbox/build/release/signed/*.apk
+            ./**/ShatterpointSandbox/app/build/outputs/*.apk
